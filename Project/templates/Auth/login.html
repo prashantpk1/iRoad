@@ -1,0 +1,33 @@
+{% extends 'extends/base.html' %}
+
+{% block title %}Login | Admin{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <h2 class="text-center">Superuser Login</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-group">
+                    <input type="password" class="form-control" id="password" name="password" required>
+                    <button class="btn btn-outline-secondary toggle-password" type="button">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
+            </div>
+           <div class="mb-3">
+
+                <a href="{% url 'password_reset' %}">Forgot Password?</a>
+
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

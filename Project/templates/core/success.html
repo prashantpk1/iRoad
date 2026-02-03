@@ -1,0 +1,31 @@
+{% extends 'extends/base.html' %}
+
+{% block title %}Success | Admin{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-md mx-auto bg-white shadow-md rounded-lg p-8 text-center">
+        <div class="mb-4">
+            <svg class="mx-auto h-16 w-16 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+        </div>
+        
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Success!</h2>
+        
+        <p class="text-gray-600 mb-6">{{ message }}</p>
+        
+        <div class="space-y-3">
+            <a href="{% url 'entity_nature_create' %}" class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
+                Create Another Entity Nature
+            </a>
+            <a href="{% url 'entity_account_create' %}" class="block w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
+                Create Entity Account
+            </a>
+            <a href="{% url 'home' %}" class="block w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition duration-200">
+                Return to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

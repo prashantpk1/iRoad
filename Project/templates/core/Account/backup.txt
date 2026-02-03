@@ -1,0 +1,239 @@
+<!-- {% extends 'extends/base.html' %}
+
+{% block title %}
+    {% if edit_id %}Edit Entity Account{% else %}Create Entity Account{% endif %} | Admin
+{% endblock %}
+
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">
+            {% if edit_id %}Edit Entity Account{% else %}Create Entity Account{% endif %}
+        </h2>
+
+        
+        <form method="post" class="space-y-8">
+            {% csrf_token %}
+              {% if messages %}
+                <div class="max-w-3xl mx-auto mb-6">
+                    {% for message in messages %}
+                        <div class="p-4 rounded-lg border {% if message.tags == 'success' %}bg-green-100 border-green-400 text-green-700{% elif message.tags == 'error' %}bg-red-100 border-red-400 text-red-700{% else %}bg-blue-100 border-blue-400 text-blue-700{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+           
+            {% if form.non_field_errors %}
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+            
+           
+            <div class="border-b border-gray-200 pb-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Account Information</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                   
+                    <div>
+                        <label for="{{ form.entity_id.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Entity ID <span class="text-red-500">*</span>
+                        </label>
+                        {{ form.entity_id }}
+                        {% if form.entity_id.errors %}
+                            <p class="mt-1 text-sm text-red-600" style="color: red;">{{ form.entity_id.errors.0 }}</p>
+                        {% endif %}
+                        <p class="mt-1 text-sm text-gray-500">{{ form.entity_id.help_text }}</p>
+                    </div>
+                    
+                   
+                    <div>
+                        <label for="{{ form.entity_nature.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Entity Nature <span class="text-red-500">*</span>
+                        </label>
+                        {{ form.entity_nature }}
+                        {% if form.entity_nature.errors %}
+                            <p class="mt-1 text-sm text-red-600" style="color: red;">{{ form.entity_nature.errors.0 }}</p>
+                        {% endif %}
+                        <p class="mt-1 text-sm text-gray-500">{{ form.entity_nature.help_text }}</p>
+                    </div>
+                    
+                    
+                    <div>
+                        <label for="{{ form.english_name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            English Name <span class="text-red-500">*</span>
+                        </label>
+                        {{ form.english_name }}
+                        {% if form.english_name.errors %}
+                            <p class="mt-1 text-sm text-red-600" style="color: red;">{{ form.english_name.errors.0 }}</p>
+                        {% endif %}
+                        <p class="mt-1 text-sm text-gray-500">{{ form.english_name.help_text }}</p>
+                    </div>
+                    
+                    
+                    <div>
+                        <label for="{{ form.arabic_name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Arabic Name
+                        </label>
+                        {{ form.arabic_name }}
+                        {% if form.arabic_name.errors %}
+                            <p class="mt-1 text-sm text-red-600" style="color: red;">{{ form.arabic_name.errors.0 }}</p>
+                        {% endif %}
+                        <p class="mt-1 text-sm text-gray-500">{{ form.arabic_name.help_text }}</p>
+                    </div>
+                    
+                    
+                    <div>
+                        <label for="{{ form.display_name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Display Name <span class="text-red-500">*</span>
+                        </label>
+                        {{ form.display_name }}
+                        {% if form.display_name.errors %}
+                            <p class="mt-1 text-sm text-red-600" style="color: red;">{{ form.display_name.errors.0 }}</p>
+                        {% endif %}
+                        <p class="mt-1 text-sm text-gray-500">{{ form.display_name.help_text }}</p>
+                    </div>
+                    
+                  
+                    <div>
+                        <label for="{{ form.entity_type.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Entity Type <span class="text-red-500">*</span>
+                        </label>
+                        {{ form.entity_type }}
+                        {% if form.entity_type.errors %}
+                            <p class="mt-1 text-sm text-red-600" style="color: red;">{{ form.entity_type.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                  
+                    <div>
+                        <label for="{{ form.account_status.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Account Status <span class="text-red-500">*</span>
+                        </label>
+                        {{ form.account_status }}
+                        {% if form.account_status.errors %}
+                            <p class="mt-1 text-sm text-red-600" style="color: red;">{{ form.account_status.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                 
+                    <div>
+                        <label for="{{ form.verification_status.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Verification Status <span class="text-red-500">*</span>
+                        </label>
+                        {{ form.verification_status }}
+                        {% if form.verification_status.errors %}
+                            <p class="mt-1 text-sm text-red-600" style="color: red;">{{ form.verification_status.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+       
+            <div class="border-b border-gray-200 pb-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Commercial Registration (CR) Information</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                    <div class="md:col-span-2">
+                        <label for="{{ form.primary_identifier_number.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Primary Identifier Number (CR Number) <span class="text-red-500">*</span>
+                        </label>
+                        {{ form.primary_identifier_number }}
+                        {% if form.primary_identifier_number.errors %}
+                            <p class="mt-1 text-sm text-red-600" style="color: red;">{{ form.primary_identifier_number.errors.0 }}</p>
+                        {% endif %}
+                        <p class="mt-1 text-sm text-gray-500">{{ form.primary_identifier_number.help_text }}</p>
+                    </div>
+                    
+                   
+                    <div>
+                        <label for="{{ form.primary_identifier_issue_date.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            CR Issue Date <span class="text-red-500">*</span>
+                        </label>
+                        {{ form.primary_identifier_issue_date }}
+                        {% if form.primary_identifier_issue_date.errors %}
+                            <p class="mt-1 text-sm text-red-600" style="color: red;">{{ form.primary_identifier_issue_date.errors.0 }}</p>
+                        {% endif %}
+                        <p class="mt-1 text-sm text-gray-500">{{ form.primary_identifier_issue_date.help_text }}</p>
+                    </div>
+                    
+             
+                    <div>
+                        <label for="{{ form.primary_identifier_expiry_date.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            CR Expiry Date <span class="text-red-500">*</span>
+                        </label>
+                        {{ form.primary_identifier_expiry_date }}
+                        {% if form.primary_identifier_expiry_date.errors %}
+                            <p class="mt-1 text-sm text-red-600" style="color: red;">{{ form.primary_identifier_expiry_date.errors.0 }}</p>
+                        {% endif %}
+                        <p class="mt-1 text-sm text-gray-500">{{ form.primary_identifier_expiry_date.help_text }}</p>
+                    </div>
+                </div>
+            </div>
+            
+        
+            <div class="pb-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">VAT Information</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                   
+                    <div>
+                        <label for="{{ form.vat_registration_status.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            VAT Registration Status <span class="text-red-500">*</span>
+                        </label>
+                        {{ form.vat_registration_status }}
+                        {% if form.vat_registration_status.errors %}
+                            <p class="mt-1 text-sm text-red-600"  style="color: red;">{{ form.vat_registration_status.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                   
+                </div>
+            </div>
+            
+           
+            <div class="flex items-center justify-between pt-4">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200">
+                    {% if edit_id %}Update Entity Account{% else %}Create Entity Account{% endif %}
+                </button>
+
+                <a href="{% url 'entity_account_list' %}" class="text-gray-600 hover:text-gray-800 font-medium">
+                    Cancel
+                </a>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    /* Form Input Styling */
+    input[type="text"],
+    input[type="date"],
+    select {
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+    }
+    
+    input[type="text"]:focus,
+    input[type="date"]:focus,
+    select:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    input[type="text"].error,
+    input[type="date"].error,
+    select.error {
+        border-color: #ef4444;
+    }
+</style>
+{% endblock %} -->

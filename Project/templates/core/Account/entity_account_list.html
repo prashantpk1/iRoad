@@ -1,0 +1,51 @@
+{% extends 'extends/base.html' %}
+
+{% block title %}Success | Admin{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-md mx-auto bg-white shadow-md rounded-lg p-8 text-center">
+        <div class="mb-4">
+                <form method="POST" action="{% url 'entity_account_list' %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-warning">
+                        Add
+                    </button>
+                </form>
+            <table class="table table-bordered mt-4">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Entity Type</th>
+            <th>PI Number</th>
+            <th>English Name</th>
+            <th>Arabic Name</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for entity in entity_accounts %}
+        <tr>
+            <td>{{ entity.id }}</td>
+            <td>{{ entity.entity_type }}</td>
+            <td>{{ entity.pi_number }}</td>
+            <td>{{ entity.english_name }}</td>
+            <td>{{ entity.arabic_name }}</td>
+            <td>
+                <a href="{% url 'entity_account_edit' entity.id %}" class="btn btn-sm btn-warning">
+                    Edit
+                </a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">No records found</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+         </div>
+    </div>
+</div>
+{% endblock %}

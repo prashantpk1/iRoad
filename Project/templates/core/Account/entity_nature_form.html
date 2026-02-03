@@ -1,0 +1,146 @@
+{% extends 'extends/base.html' %}
+
+{% block title %}Create Entity Nature | Admin{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">Create Entity Nature</h2>
+        
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            {% if messages %}
+                <div class="max-w-3xl mx-auto mb-6">
+                    {% for message in messages %}
+                        <div class="p-4 rounded-lg border {% if message.tags == 'success' %}bg-green-100 border-green-400 text-green-700{% elif message.tags == 'error' %}bg-red-100 border-red-400 text-red-700{% else %}bg-blue-100 border-blue-400 text-blue-700{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <!-- Display non-field errors -->
+            {% if form.non_field_errors %}
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+            
+            <!-- Entity Nature Code -->
+            <div>
+                <label for="{{ form.entity_nature_code.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    Entity Nature Code <span class="text-red-500">*</span>
+                </label>
+                {{ form.entity_nature_code }}
+                {% if form.entity_nature_code.errors %}
+                    <p class="mt-1 text-sm text-red-600" style="color: red;">{{ form.entity_nature_code.errors.0 }}</p>
+                {% endif %}
+               
+            </div>
+            
+            <!-- Entity Nature Type -->
+            <div>
+                <label for="{{ form.entity_nature_type.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    Entity Nature Type <span class="text-red-500">*</span>
+                </label>
+                {{ form.entity_nature_type }}
+                {% if form.entity_nature_type.errors %}
+                    <p class="mt-1 text-sm text-red-600" style="color: red;">{{ form.entity_nature_type.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <!-- Entity Nature Status -->
+            <div>
+                <label for="{{ form.entity_nature_status.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    Entity Nature Status <span class="text-red-500">*</span>
+                </label>
+                {{ form.entity_nature_status }}
+                {% if form.entity_nature_status.errors %}
+                    <p class="mt-1 text-sm text-red-600" style="color: red;">{{ form.entity_nature_status.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <!-- Entity Nature Nationality -->
+            <div>
+                <label for="{{ form.entity_nature_nationality.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    Entity Nature Nationality <span class="text-red-500">*</span>
+                </label>
+                {{ form.entity_nature_nationality }}
+                {% if form.entity_nature_nationality.errors %}
+                    <p class="mt-1 text-sm text-red-600" style="color: red;">{{ form.entity_nature_nationality.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <!-- Entity Nature Residency -->
+            <div>
+                <label for="{{ form.entity_nature_residency.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    Entity Nature Residency <span class="text-red-500">*</span>
+                </label>
+                {{ form.entity_nature_residency }}
+                {% if form.entity_nature_residency.errors %}
+                    <p class="mt-1 text-sm text-red-600" style="color: red;">{{ form.entity_nature_residency.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <!-- Entity Nature Label Arabic -->
+            <div>
+                <label for="{{ form.entity_nature_label_arabic.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    Entity Nature Label (Arabic) <span class="text-red-500">*</span>
+                </label>
+                {{ form.entity_nature_label_arabic }}
+                {% if form.entity_nature_label_arabic.errors %}
+                    <p class="mt-1 text-sm text-red-600" style="color: red;">{{ form.entity_nature_label_arabic.errors.0 }}</p>
+                {% endif %}
+                <p class="mt-1 text-sm text-gray-500">{{ form.entity_nature_label_arabic.help_text }}</p>
+            </div>
+            
+            <!-- Entity Nature Label English -->
+            <div>
+                <label for="{{ form.entity_nature_label_english.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    Entity Nature Label (English) <span class="text-red-500">*</span>
+                </label>
+                {{ form.entity_nature_label_english }}
+                {% if form.entity_nature_label_english.errors %}
+                    <p class="mt-1 text-sm text-red-600" style="color: red;">{{ form.entity_nature_label_english.errors.0 }}</p>
+                {% endif %}
+                <p class="mt-1 text-sm text-gray-500">{{ form.entity_nature_label_english.help_text }}</p>
+            </div>
+            
+            <!-- Submit Button -->
+            <div class="flex items-center justify-between pt-4">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200">
+                    Create Entity Nature
+                </button>
+                <a href="#" class="text-gray-600 hover:text-gray-800 font-medium">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    /* Form Input Styling */
+    input[type="text"],
+    select {
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+    }
+    
+    input[type="text"]:focus,
+    select:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    input[type="text"].error,
+    select.error {
+        border-color: #ef4444;
+    }
+</style>
+{% endblock %}
