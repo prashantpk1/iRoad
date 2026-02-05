@@ -119,20 +119,20 @@ class DocumentForm(forms.ModelForm):
     class Meta:
         model = DocumentMaster
         fields = [
-            'document_id',
-            'document_type',
-            'document_title',
-            'document_number',
-            'document_certificate_ref_no',
-            'entity_account',
-            'issue_date',
-            'registration_date',
-            'is_expiry_applicable',
-            'expiry_date',
-            'validity_status',
-            'document_status',
-            'attachment_file'
+            'document_id', 'document_type', 'document_title', 
+            'document_number', 'document_certificate_ref_no', 
+            'entity_account', 'issue_date', 'registration_date', 
+            'is_expiry_applicable', 'expiry_date', 'validity_status', 
+            'document_status', 'attachment_file'
         ]
+        
+        # Adding the DateInput widget for date fields
+        widgets = {
+            'issue_date': forms.DateInput(attrs={'type': 'date'}),
+            'registration_date': forms.DateInput(attrs={'type': 'date'}),
+            'expiry_date': forms.DateInput(attrs={'type': 'date'}),
+        }
+    
 
 
 class SubAccountForm(forms.ModelForm):

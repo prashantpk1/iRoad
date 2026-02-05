@@ -1,0 +1,81 @@
+{% load static %}
+
+<div class="drawer-header">
+    <div class="drawer-nav">
+        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="navigateDrawer(-1)" title="Previous">
+            <i class="bi bi-chevron-left"></i>
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="navigateDrawer(1)" title="Next">
+            <i class="bi bi-chevron-right"></i>
+        </button>
+    </div>
+    <div class="drawer-actions">
+        <a href="{% url 'entity_account_edit' entity.pk %}" class="btn btn-sm btn-primary">Edit</a>
+        <a href="{% url 'entity_account_duplicate' entity.pk %}" class="btn btn-sm btn-outline-secondary">Duplicate</a>
+        <div class="dropdown d-inline-block">
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                More
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item text-danger" href="#" onclick="deleteEntity({{ entity.pk }})">Delete</a></li>
+            </ul>
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-secondary ms-2" onclick="closeDrawer()">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
+</div>
+
+<div class="drawer-body">
+    <table class="table table-sm table-bordered detail-table">
+        <tr><th>Entity ID</th><td>{{ entity.entity_id }}</td></tr>
+        <tr><th>Entity Type</th><td>{{ entity.get_entity_type_display }}</td></tr>
+        <tr><th>PI Number</th><td>{{ entity.primary_identifier_number }}</td></tr>
+        <tr><th>PI Issue Date</th><td>{{ entity.primary_identifier_issue_date|date:"d-M-Y" }}</td></tr>
+        <tr><th>PI Expiry Date</th><td>{{ entity.primary_identifier_expiry_date|date:"d-M-Y" }}</td></tr>
+        <tr><th>VAT Number</th><td>{{ entity.vat_number|default:"-" }}</td></tr>
+        <tr><th>VAT Registration Date</th><td>{{ entity.vat_registration_date|date:"d-M-Y"|default:"-" }}</td></tr>
+        <tr>
+            <th>Account Status</th>
+            <td>
+                <span class="badge bg-{% if entity.account_status == 'active' %}success{% elif entity.account_status == 'inactive' %}danger{% else %}warning{% endif %}">
+                    {{ entity.get_account_status_display }}
+                </span>
+            </td>
+        </tr>
+        <tr><th>Verification Status</th><td>{{ entity.get_verification_status_display }}</td></tr>
+        <tr><th>VAT Registration Status</th><td>{{ entity.get_vat_registration_status_display }}</td></tr>
+        <tr><th>Entity Nature</th><td>{{ entity.entity_nature }}</td></tr>
+        <tr><th>Display Name</th><td>{{ entity.display_name }}</td></tr>
+        <tr><th>English Name</th><td>{{ entity.english_name }}</td></tr>
+        <tr><th>Arabic Name</th><td dir="rtl">{{ entity.arabic_name|default:"-" }}</td></tr>
+    </table>
+
+    <hr class="my-4">
+    
+    <div class="comments-section">
+        <h6 class="mb-3">
+            <i class="bi bi-chat-left-text me-2"></i>
+            Comments ({{ comments|length }})
+        </h6>
+        
+        <div id="commentsList">
+            {% for comment in comments %}
+                {% include "core/Account/_comment_item.html" with comment=comment %}
+            {% empty %}
+                <p class="text-muted" id="noComments">No comments yet</p>
+            {% endfor %}
+        </div>
+        
+        <!-- Add Comment Form -->
+        <form class="mt-4" id="commentForm" onsubmit="return submitComment(event, {{ entity.pk }})">
+            {% csrf_token %}
+            <div class="mb-2">
+                <textarea name="comment" class="form-control" rows="2" placeholder="Write a comment..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">
+                <i class="bi bi-send me-1"></i>Comment
+            </button>
+        </form>
+    </div>
+</div>

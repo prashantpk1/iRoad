@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -131,3 +134,25 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 AUTH_USER_MODEL = 'App.User'
+
+
+# settings.py
+
+
+# The backend to use for sending emails
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# Host and Port details
+EMAIL_HOST = 'smtp.gmail.com'  # e.g., smtp.sendgrid.net or smtp.gmail.com
+EMAIL_PORT = 587               # Usually 587 for TLS or 465 for SSL
+
+# Security
+EMAIL_USE_TLS = True           # Use True if using port 587
+EMAIL_USE_SSL = False          # Use True if using port 465
+
+# Authentication
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+
+# Default 'from' address
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')

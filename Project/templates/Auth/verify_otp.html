@@ -1,0 +1,77 @@
+{% extends 'extends/base.html' %}
+
+{% block title %}Verify OTP - iRoad{% endblock %}
+
+{% block content %}
+<div class="auth-header">
+    <h2>Enter Verification Code</h2>
+    <p>We've sent a 6-digit code to {{ email }}</p>
+</div>
+
+<div class="auth-body">
+    <a href="{% url 'login' %}" class="back-link">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+        </svg>
+        Back to Sign In
+    </a>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" action="{% url 'verify_otp' %}" id="otpForm">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="otp_code" class="form-label">Verification Code</label>
+            <input type="text" class="form-control text-center" id="otp_code" name="otp_code" 
+                   placeholder="Enter 6-digit code" maxlength="6" pattern="[0-9]{6}" 
+                   style="font-size: 24px; letter-spacing: 10px; font-weight: bold;" required>
+            {% if form.otp_code.errors %}
+                <div class="text-danger mt-2">
+                    {% for error in form.otp_code.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <button type="submit" class="btn btn-primary mb-3">Verify</button>
+        
+        <div class="text-center">
+            <p class="mb-2">Didn't receive the code?</p>
+            <a href="{% url 'resend_otp' %}" class="btn-link">Resend OTP</a>
+        </div>
+    </form>
+</div>
+
+<div class="auth-footer">
+    <small class="text-muted">The code will expire in 10 minutes</small>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Auto-submit form when 6 digits are entered
+    document.getElementById('otp_code').addEventListener('input', function(e) {
+        let value = e.target.value;
+        // Remove non-numeric characters
+        value = value.replace(/[^0-9]/g, '');
+        e.target.value = value;
+        
+        // Auto-submit when 6 digits are entered
+        if (value.length === 6) {
+            // Optional: Add a small delay for better UX
+            setTimeout(() => {
+                document.getElementById('otpForm').submit();
+            }, 500);
+        }
+    });
+</script>
+{% endblock %}

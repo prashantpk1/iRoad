@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
-
+from App.models import User
 
 
 # Create your models here.
@@ -135,7 +135,6 @@ class EntityAccount(models.Model):
     # ==================== Account Information ====================
     entity_id = models.CharField(
         max_length=50,
-        unique=True,
         verbose_name="Entity ID",
         
     )
@@ -191,7 +190,6 @@ class EntityAccount(models.Model):
     # ==================== CR Information ====================
     primary_identifier_number = models.CharField(
         max_length=100,
-        unique=True,
         verbose_name="Primary Identifier Number",
         
     )
@@ -240,8 +238,32 @@ class EntityAccount(models.Model):
 
 
     def __str__(self):
-        return self.entity_id
+        return self.english_name
     
+
+
+
+class EntityAccountComment(models.Model):
+    entity_account = models.ForeignKey(
+        EntityAccount,
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    parent = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='replies'
+    )
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']
+
+
 
 class DocumentType(models.Model):
     name_en = models.CharField(
@@ -299,7 +321,7 @@ class DocumentMaster(models.Model):
     # -------------------------
     # DATE FIELDS
     # -------------------------
-    issue_date = models.DateField()
+    issue_date = models.DateField(blank=True, null=True)
 
     registration_date = models.DateField(
         blank=True,

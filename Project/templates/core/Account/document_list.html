@@ -1,0 +1,141 @@
+{% extends 'extends/base.html' %}
+
+{% block title %}Document List | Admin{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between mb-3">
+        <h4>Document List</h4>
+        <a href="{% url 'document_create' %}" class="btn btn-primary">Add</a>
+    </div>
+
+    <table id="documentTable" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th data-col="0">Document ID </th>
+                <th data-col="1">Entity Account </th>
+                <th data-col="2">Document Title </th>
+                <th data-col="3">Document Number</th>
+                <th data-col="4">Issue Date</th>
+                <th data-col="5">Expiry Date</th>
+                <th data-col="6">Attachment</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for entity in documents %}
+            <tr>
+                <td>{{ entity.id }}</td>
+                <td>{{ entity.entity_account }}</td>
+                <td>{{ entity.document_title }}</td>
+                <td>{{ entity.document_number }}</td>
+                <td>{{ entity.issue_date }}</td>
+                <td>{{ entity.expiry_date }}</td>
+                <td>{{ entity.attachment_file }}</td>
+                <td>
+                    <a href="{% url 'document_edit' entity.id %}"
+                       class="btn btn-sm btn-warning">
+                        Edit
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" class="text-center">No records found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+<!-- COLUMN DROPDOWN MENU -->
+<div id="columnMenu"
+     class="dropdown-menu p-3 shadow"
+     style="position:absolute; display:none; z-index:9999; width:220px;">
+
+    <input type="text"
+           id="colSearch"
+           class="form-control mb-2"
+           placeholder="Search">
+
+    <button class="btn btn-sm btn-outline-primary w-100 mb-1" id="sortAsc">
+        Sort Ascending
+    </button>
+
+    <button class="btn btn-sm btn-outline-primary w-100 mb-1" id="sortDesc">
+        Sort Descending
+    </button>
+
+    <button class="btn btn-sm btn-outline-secondary w-100" id="hideCol">
+        Hide Column
+    </button>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script>
+let table;
+let selectedColumn = null;
+
+$(document).ready(function () {
+
+    table = $('#documentTable').DataTable({
+        paging: false,
+        searching: false,
+        ordering: true,   // MUST be true for dropdown sorting
+        info: false,
+        columnDefs: [
+            { orderable: false, targets: 7 } // Action column
+        ]
+    });
+
+    // Disable default DataTables header click sorting
+    $('#documentTable thead th').off('click.DT');
+
+    // Open dropdown on column click
+    $('#documentTable thead th[data-col]').on('click', function (e) {
+        e.stopPropagation();
+
+        selectedColumn = $(this).data('col');
+
+        $('#columnMenu').css({
+            top: e.pageY + 5,
+            left: e.pageX + 5
+        }).show();
+
+        $('#colSearch').val('');
+    });
+
+    // Close dropdown on outside click
+    $(document).on('click', function () {
+        $('#columnMenu').hide();
+    });
+
+    // Column search
+    $('#colSearch').on('keyup', function () {
+        table.column(selectedColumn).search(this.value).draw();
+    });
+
+    // Sort ascending
+    $('#sortAsc').on('click', function () {
+        table.order([selectedColumn, 'asc']).draw();
+    });
+
+    // Sort descending
+    $('#sortDesc').on('click', function () {
+        table.order([selectedColumn, 'desc']).draw();
+    });
+
+    // Hide column
+    $('#hideCol').on('click', function () {
+        table.column(selectedColumn).visible(false);
+        $('#columnMenu').hide();
+    });
+
+});
+</script>
+{% endblock js %}

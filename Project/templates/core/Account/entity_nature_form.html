@@ -5,7 +5,10 @@
 {% block content %}
 <div class="container mx-auto px-4 py-8">
     <div class="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6">
-        <h2 class="text-2xl font-bold mb-6 text-gray-800">Create Entity Nature</h2>
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">
+            {% if edit_id %}Edit Entity Nature{% else %}Create Entity Nature{% endif %}
+            
+        </h2>
         
         <form method="post" class="space-y-6">
             {% csrf_token %}
