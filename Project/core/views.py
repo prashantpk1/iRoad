@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import get_object_or_404, render,redirect
 from core.core_forms import *
 from django.views import View
@@ -291,50 +292,70 @@ def add_entity_comment(request, pk):
 
 
 
-def entity_nature_detail_api(request, pk):
-    """API endpoint for entity nature drawer details"""
-    nature = get_object_or_404(EntityNature, pk=pk)
+
+@login_required
+def duplicate_entity_nature(request, pk):
+    entity = get_object_or_404(EntityNature, pk=pk)
+    entity.pk = None
+    entity.entity_nature_label_english = f"{entity.entity_nature_label_english} (Copy)"
+    entity.save()
+    return redirect('entity_nature_list')
+
+@login_required
+def entity_account_nature_drawer(request, pk):
+    """
+    Single view that returns the drawer HTML content.
+    This is called via AJAX when clicking a row.
+    """
+    entity = get_object_or_404(
+        EntityNature.objects.select_related('entity_nature_type'), 
+        pk=pk
+    )
+    comments = entity.comments.filter(parent=None).select_related('user')
     
-    # Get comments
-    comments = EntityNatureComment.objects.filter(entity_nature=nature).order_by('-created_at')
-    
-    data = {
-        'id': nature.id,
-        'entity_nature_code': nature.entity_nature_code,
-        'entity_nature_type': nature.get_entity_nature_type_display(),
-        'entity_nature_status': nature.entity_nature_status,
-        'entity_nature_nationality': nature.get_entity_nature_nationality_display(),
-        'entity_nature_residency': nature.get_entity_nature_residency_display(),
-        'entity_nature_label_english': nature.entity_nature_label_english,
-        'entity_nature_label_arabic': nature.entity_nature_label_arabic,
-        'comments': [
-            {
-                'user': c.user.username,
-                'text': c.text,
-                'created_at': c.created_at.strftime('%Y-%m-%d %H:%M')
-            }
-            for c in comments
-        ]
-    }
-    return JsonResponse(data)
+    return render(request, 'core/Account/entity_nature_drawer.html', {
+        'entity': entity,
+        'comments': comments,
+    })
+
 
 @require_POST
-def add_entity_nature_comment(request, pk):
-    """Add comment to entity nature"""
-    nature = get_object_or_404(EntityNature, pk=pk)
-    data = json.loads(request.body)
+@login_required
+def add_entity_comment(request, pk):
+    """
+    Handle adding comments and replies.
+    Returns JSON for AJAX requests, redirects for normal requests.
+    """
+    entity = get_object_or_404(EntityNature, pk=pk)
+    comment_text = request.POST.get('comment', '').strip()
+    parent_id = request.POST.get('parent_id')
     
-    comment = EntityNatureComment.objects.create(
-        entity_nature=nature,
+    if not comment_text:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'error': 'Comment cannot be empty'}, status=400)
+        messages.error(request, 'Comment cannot be empty')
+        return redirect('entity_nature_list')
+    
+    parent = None
+    if parent_id:
+        try:
+            parent = EntityAccountComment.objects.get(id=parent_id, entity_account=entity)
+        except EntityAccountComment.DoesNotExist:
+            pass
+    
+    comment = EntityAccountComment.objects.create(
+        entity_account=entity,
         user=request.user,
-        text=data.get('text', '')
+        comment=comment_text,
+        parent=parent
     )
     
-    return JsonResponse({'success': True, 'id': comment.id})
-
-@require_POST
-def delete_entity_nature(request, pk):
-    """Delete entity nature"""
-    nature = get_object_or_404(EntityNature, pk=pk)
-    nature.delete()
-    return JsonResponse({'success': True})
+    # If AJAX request, return the new comment HTML
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return render(request, 'core/Account/_comment_item.html', {
+            'comment': comment,
+            'is_reply': parent is not None,
+        })
+    
+    messages.success(request, 'Comment added successfully')
+    return redirect('entity_account_list')

@@ -51,8 +51,10 @@ urlpatterns = [
     path('entity-accounts/<int:pk>/duplicate/', duplicate_entity_account, name='entity_account_duplicate'),
 
 
-    path('entity-natures/<int:pk>/detail/', entity_nature_detail_api, name='entity_nature_detail_api'),
-    path('entity-natures/<int:pk>/comment/', add_entity_nature_comment, name='entity_nature_comment'),
-    path('entity-natures/<int:pk>/delete/', delete_entity_nature, name='entity_nature_delete'),
+    # path('entity-natures/<int:pk>/detail/', entity_nature_detail_api, name='entity_nature_detail_api'),
+    # path('entity-natures/<int:pk>/comment/', add_entity_nature_comment, name='entity_nature_comment'),
+    # path('entity-natures/<int:pk>/duplicate/', duplicate_entity_nature, name='entity_nature_duplicate'),
+    # path('entity-natures/<int:pk>/delete/', delete_entity_nature, name='entity_nature_delete'),
+    # path('entity-natures/<int:pk>/toggle-status/', toggle_entity_nature_status, name='entity_nature_toggle_status'),    
 
 ]

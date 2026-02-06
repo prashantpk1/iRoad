@@ -1,149 +1,286 @@
 {% extends 'extends/base.html' %}
 
-{% block title %}Create Entity Nature | Admin{% endblock %}
+{% block title %}
+    {% if edit_id %}Edit Entity Nature{% else %}Create Entity Nature{% endif %} | iRoad2
+{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'entity_nature_list' %}">Entity Nature</a></li>
+    <li class="breadcrumb-item active">
+        {% if edit_id %}Edit Entity Nature{% else %}Create Entity Nature{% endif %}
+    </li>
+{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-8">
-    <div class="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6">
-        <h2 class="text-2xl font-bold mb-6 text-gray-800">
-            {% if edit_id %}Edit Entity Nature{% else %}Create Entity Nature{% endif %}
-            
-        </h2>
-        
-        <form method="post" class="space-y-6">
-            {% csrf_token %}
-            {% if messages %}
-                <div class="max-w-3xl mx-auto mb-6">
-                    {% for message in messages %}
-                        <div class="p-4 rounded-lg border {% if message.tags == 'success' %}bg-green-100 border-green-400 text-green-700{% elif message.tags == 'error' %}bg-red-100 border-red-400 text-red-700{% else %}bg-blue-100 border-blue-400 text-blue-700{% endif %}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-            
-            <!-- Display non-field errors -->
-            {% if form.non_field_errors %}
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                    {{ form.non_field_errors }}
-                </div>
-            {% endif %}
-            
-            <!-- Entity Nature Code -->
-            <div>
-                <label for="{{ form.entity_nature_code.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                    Entity Nature Code <span class="text-red-500">*</span>
-                </label>
-                {{ form.entity_nature_code }}
-                {% if form.entity_nature_code.errors %}
-                    <p class="mt-1 text-sm text-red-600" style="color: red;">{{ form.entity_nature_code.errors.0 }}</p>
-                {% endif %}
-               
-            </div>
-            
-            <!-- Entity Nature Type -->
-            <div>
-                <label for="{{ form.entity_nature_type.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                    Entity Nature Type <span class="text-red-500">*</span>
-                </label>
-                {{ form.entity_nature_type }}
-                {% if form.entity_nature_type.errors %}
-                    <p class="mt-1 text-sm text-red-600" style="color: red;">{{ form.entity_nature_type.errors.0 }}</p>
-                {% endif %}
-            </div>
-            
-            <!-- Entity Nature Status -->
-            <div>
-                <label for="{{ form.entity_nature_status.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                    Entity Nature Status <span class="text-red-500">*</span>
-                </label>
-                {{ form.entity_nature_status }}
-                {% if form.entity_nature_status.errors %}
-                    <p class="mt-1 text-sm text-red-600" style="color: red;">{{ form.entity_nature_status.errors.0 }}</p>
-                {% endif %}
-            </div>
-            
-            <!-- Entity Nature Nationality -->
-            <div>
-                <label for="{{ form.entity_nature_nationality.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                    Entity Nature Nationality <span class="text-red-500">*</span>
-                </label>
-                {{ form.entity_nature_nationality }}
-                {% if form.entity_nature_nationality.errors %}
-                    <p class="mt-1 text-sm text-red-600" style="color: red;">{{ form.entity_nature_nationality.errors.0 }}</p>
-                {% endif %}
-            </div>
-            
-            <!-- Entity Nature Residency -->
-            <div>
-                <label for="{{ form.entity_nature_residency.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                    Entity Nature Residency <span class="text-red-500">*</span>
-                </label>
-                {{ form.entity_nature_residency }}
-                {% if form.entity_nature_residency.errors %}
-                    <p class="mt-1 text-sm text-red-600" style="color: red;">{{ form.entity_nature_residency.errors.0 }}</p>
-                {% endif %}
-            </div>
-            
-            <!-- Entity Nature Label Arabic -->
-            <div>
-                <label for="{{ form.entity_nature_label_arabic.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                    Entity Nature Label (Arabic) <span class="text-red-500">*</span>
-                </label>
-                {{ form.entity_nature_label_arabic }}
-                {% if form.entity_nature_label_arabic.errors %}
-                    <p class="mt-1 text-sm text-red-600" style="color: red;">{{ form.entity_nature_label_arabic.errors.0 }}</p>
-                {% endif %}
-                <p class="mt-1 text-sm text-gray-500">{{ form.entity_nature_label_arabic.help_text }}</p>
-            </div>
-            
-            <!-- Entity Nature Label English -->
-            <div>
-                <label for="{{ form.entity_nature_label_english.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                    Entity Nature Label (English) <span class="text-red-500">*</span>
-                </label>
-                {{ form.entity_nature_label_english }}
-                {% if form.entity_nature_label_english.errors %}
-                    <p class="mt-1 text-sm text-red-600" style="color: red;">{{ form.entity_nature_label_english.errors.0 }}</p>
-                {% endif %}
-                <p class="mt-1 text-sm text-gray-500">{{ form.entity_nature_label_english.help_text }}</p>
-            </div>
-            
-            <!-- Submit Button -->
-            <div class="flex items-center justify-between pt-4">
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200">
-                    Create Entity Nature
-                </button>
-                <a href="#" class="text-gray-600 hover:text-gray-800 font-medium">
-                    Cancel
-                </a>
-            </div>
-        </form>
-    </div>
+<!-- Page Header -->
+<div class="page-header d-flex justify-content-between align-items-center">
+    <h1>{% if edit_id %}Edit Entity Nature{% else %}Create Entity Nature{% endif %}</h1>
 </div>
 
+<!-- Messages -->
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-4" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<!-- Form -->
+<form method="post" class="needs-validation" novalidate>
+    {% csrf_token %}
+    
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger mb-4">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+
+    <!-- Entity Nature Information -->
+    <div class="form-card mb-4">
+        <div class="form-card-header">
+            Entity Nature Information
+        </div>
+        <div class="form-card-body">
+            <div class="row g-4">
+                <!-- Row 1 -->
+                <div class="col-md-6">
+                    <label for="{{ form.entity_nature_code.id_for_label }}" class="form-label">
+                        Entity Nature Code {% if form.entity_nature_code.field.required %}<span class="text-danger">*</span>{% endif %}
+                    </label>
+                    {{ form.entity_nature_code }}
+                    {% if form.entity_nature_code.errors %}
+                        <div class="invalid-feedback d-block">{{ form.entity_nature_code.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="col-md-6">
+                    <label for="{{ form.entity_nature_type.id_for_label }}" class="form-label">
+                        Entity Nature Type {% if form.entity_nature_type.field.required %}<span class="text-danger">*</span>{% endif %}
+                    </label>
+                    {{ form.entity_nature_type }}
+                    {% if form.entity_nature_type.errors %}
+                        <div class="invalid-feedback d-block">{{ form.entity_nature_type.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Row 2 -->
+                <div class="col-md-6">
+                    <label for="{{ form.entity_nature_status.id_for_label }}" class="form-label">
+                        Entity Nature Status {% if form.entity_nature_status.field.required %}<span class="text-danger">*</span>{% endif %}
+                    </label>
+                    {{ form.entity_nature_status }}
+                    {% if form.entity_nature_status.errors %}
+                        <div class="invalid-feedback d-block">{{ form.entity_nature_status.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="col-md-6">
+                    <label for="{{ form.entity_nature_nationality.id_for_label }}" class="form-label">
+                        Entity Nature Nationality {% if form.entity_nature_nationality.field.required %}<span class="text-danger">*</span>{% endif %}
+                    </label>
+                    {{ form.entity_nature_nationality }}
+                    {% if form.entity_nature_nationality.errors %}
+                        <div class="invalid-feedback d-block">{{ form.entity_nature_nationality.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Row 3 -->
+                <div class="col-md-6">
+                    <label for="{{ form.entity_nature_residency.id_for_label }}" class="form-label">
+                        Entity Nature Residency {% if form.entity_nature_residency.field.required %}<span class="text-danger">*</span>{% endif %}
+                    </label>
+                    {{ form.entity_nature_residency }}
+                    {% if form.entity_nature_residency.errors %}
+                        <div class="invalid-feedback d-block">{{ form.entity_nature_residency.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Labels Section -->
+    <div class="form-card mb-4">
+        <div class="form-card-header">
+            Labels
+        </div>
+        <div class="form-card-body">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <label for="{{ form.entity_nature_label_english.id_for_label }}" class="form-label">
+                        Entity Nature Label (English) {% if form.entity_nature_label_english.field.required %}<span class="text-danger">*</span>{% endif %}
+                    </label>
+                    {{ form.entity_nature_label_english }}
+                    {% if form.entity_nature_label_english.errors %}
+                        <div class="invalid-feedback d-block">{{ form.entity_nature_label_english.errors.0 }}</div>
+                    {% endif %}
+                    <div class="form-text">{{ form.entity_nature_label_english.help_text }}</div>
+                </div>
+                
+                <div class="col-md-6">
+                    <label for="{{ form.entity_nature_label_arabic.id_for_label }}" class="form-label">
+                        Entity Nature Label (Arabic) {% if form.entity_nature_label_arabic.field.required %}<span class="text-danger">*</span>{% endif %}
+                    </label>
+                    {{ form.entity_nature_label_arabic }}
+                    {% if form.entity_nature_label_arabic.errors %}
+                        <div class="invalid-feedback d-block">{{ form.entity_nature_label_arabic.errors.0 }}</div>
+                    {% endif %}
+                    <div class="form-text">{{ form.entity_nature_label_arabic.help_text }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="d-flex gap-2 mb-4">
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-check-lg me-1"></i>{% if edit_id %}Update{% else %}Create{% endif %} Entity Nature
+        </button>
+        <button type="reset" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-counterclockwise me-1"></i>Reset
+        </button>
+        <a href="{% url 'entity_nature_list' %}" class="btn btn-outline-secondary ms-auto">
+            <i class="bi bi-x-lg me-1"></i>Cancel
+        </a>
+    </div>
+</form>
+{% endblock %}
+
+{% block extra_css %}
 <style>
-    /* Form Input Styling */
-    input[type="text"],
-    select {
-        width: 100%;
-        padding: 0.5rem 0.75rem;
+    /* Form Card Styling */
+    .form-card {
+        background: #fff;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        border: 1px solid #e5e7eb;
+    }
+
+    .form-card-header {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e5e7eb;
+        font-weight: 600;
+        color: #374151;
+        font-size: 1rem;
+        background: #fafafa;
+        border-radius: 0.5rem 0.5rem 0 0;
+    }
+
+    .form-card-body {
+        padding: 1.5rem;
+    }
+
+    /* Form Controls */
+    .form-label {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.375rem;
+    }
+
+    .form-control, .form-select {
         border: 1px solid #d1d5db;
         border-radius: 0.375rem;
+        padding: 0.5rem 0.75rem;
         font-size: 0.875rem;
-        line-height: 1.25rem;
+        color: #111827;
+        background-color: #fff;
     }
-    
+
+    .form-control:focus, .form-select:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    .form-control::placeholder {
+        color: #9ca3af;
+    }
+
+    /* Help text */
+    .form-text {
+        font-size: 0.875rem;
+        color: #6b7280;
+        margin-top: 0.25rem;
+    }
+
+    /* Invalid feedback */
+    .invalid-feedback {
+        font-size: 0.875rem;
+    }
+
+    /* Button styling */
+    .btn {
+        padding: 0.5rem 1.25rem;
+        font-weight: 500;
+        font-size: 0.875rem;
+    }
+
+    .btn-primary {
+        background-color: #4f46e5;
+        border-color: #4f46e5;
+    }
+
+    .btn-primary:hover {
+        background-color: #4338ca;
+        border-color: #4338ca;
+    }
+
+    .btn-outline-secondary {
+        border-color: #d1d5db;
+        color: #6b7280;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #f3f4f6;
+        border-color: #9ca3af;
+        color: #374151;
+    }
+
+    /* Form field styling for Django widgets */
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+        display: block;
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #111827;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
     input[type="text"]:focus,
-    select:focus {
-        outline: none;
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    input[type="number"]:focus,
+    select:focus,
+    textarea:focus {
+        color: #111827;
+        background-color: #fff;
+        border-color: #6366f1;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.1);
     }
-    
-    input[type="text"].error,
-    select.error {
-        border-color: #ef4444;
+
+    select {
+        appearance: auto;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 16px 12px;
+        padding-right: 2.5rem;
+    }
+
+    /* Arabic input - RTL support */
+    input[name*="arabic"],
+    input[name*="label_ar"] {
+        direction: rtl;
+        text-align: right;
     }
 </style>
 {% endblock %}

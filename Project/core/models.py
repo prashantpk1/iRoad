@@ -247,7 +247,16 @@ class EntityAccountComment(models.Model):
     entity_account = models.ForeignKey(
         EntityAccount,
         on_delete=models.CASCADE,
-        related_name='comments'
+        related_name='comments',
+        null=True,
+        blank=True,
+    )
+    entity_nature = models.ForeignKey(
+        EntityNature,
+        on_delete=models.CASCADE,
+        related_name='comments_nature',
+        null=True,
+        blank=True,
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     parent = models.ForeignKey(
