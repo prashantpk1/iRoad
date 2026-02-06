@@ -20,7 +20,7 @@
                 <th data-col="5">PI Expiry Date</th>
                 <th data-col="6">English Name</th>
                 <th data-col="7">Arabic Name</th>
-                <th>Action</th>
+                <!-- <th>Action</th> -->
             </tr>
         </thead>
         <tbody>
@@ -34,12 +34,12 @@
                 <td>{{ entity.primary_identifier_expiry_date|date:"d-M-Y" }}</td>
                 <td>{{ entity.english_name }}</td>
                 <td>{{ entity.arabic_name|default:"-" }}</td>
-                <td>
-                    <!-- CORRECT - use entity_account_edit for editing -->
+                <!-- <td>
+              
                     <a href="{% url 'entity_account_edit' entity.id %}" class="btn btn-sm btn-warning edit-btn">
                         Edit
                     </a>
-                </td>
+                </td> -->
             </tr>
             {% empty %}
             <tr>

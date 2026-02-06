@@ -1,0 +1,728 @@
+{% load navigation_tags %}
+
+<!-- Dark Sidebar Navigation -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+        <div class="brand-icon">
+            <i class="bi bi-box-fill"></i>
+        </div>
+        <span class="brand-text">iRoad2</span>
+    </div>
+    
+    <nav class="sidebar-nav">
+        {% with current_section=request.resolver_match.url_name|get_section %}
+        
+        <!-- SECTION SELECTOR - Independent from submenu -->
+        <div class="section-selector-wrapper">
+            <div class="section-selector-header" onclick="toggleSectionDropdown()">
+                <i class="bi bi-grid-fill"></i>
+                <span id="currentSectionName">{{ current_section|default:"Accounts" }}</span>
+                <i class="bi bi-chevron-down ms-auto section-toggle-icon" id="sectionToggleIcon"></i>
+            </div>
+            
+            <!-- Scrollable Section Menu - Separate from main nav -->
+            <div class="section-dropdown" id="sectionDropdown">
+                <div class="section-dropdown-inner">
+                    <a href="{% url 'entity_account_list' %}" 
+                       class="section-item {% if current_section == 'Accounts' %}active{% endif %}"
+                       data-section="Accounts">
+                        <i class="bi bi-check-lg {% if current_section == 'Accounts' %}visible{% else %}invisible{% endif %}"></i>
+                        <span>Accounts</span>
+                    </a>
+                    <a href="#" 
+                       class="section-item {% if current_section == 'Services' %}active{% endif %}"
+                       data-section="Services">
+                        <i class="bi bi-check-lg {% if current_section == 'Services' %}visible{% else %}invisible{% endif %}"></i>
+                        <span>Services</span>
+                    </a>
+                    <a href="#" 
+                       class="section-item {% if current_section == 'Pricing' %}active{% endif %}"
+                       data-section="Pricing">
+                        <i class="bi bi-check-lg {% if current_section == 'Pricing' %}visible{% else %}invisible{% endif %}"></i>
+                        <span>Pricing</span>
+                    </a>
+                    <a href="#" 
+                       class="section-item {% if current_section == 'Sales' %}active{% endif %}"
+                       data-section="Sales">
+                        <i class="bi bi-check-lg {% if current_section == 'Sales' %}visible{% else %}invisible{% endif %}"></i>
+                        <span>Sales</span>
+                    </a>
+                    <a href="#" 
+                       class="section-item {% if current_section == 'Purchases' %}active{% endif %}"
+                       data-section="Purchases">
+                        <i class="bi bi-check-lg {% if current_section == 'Purchases' %}visible{% else %}invisible{% endif %}"></i>
+                        <span>Purchases</span>
+                    </a>
+                    <a href="#" 
+                       class="section-item {% if current_section == 'Operations' %}active{% endif %}"
+                       data-section="Operations">
+                        <i class="bi bi-check-lg {% if current_section == 'Operations' %}visible{% else %}invisible{% endif %}"></i>
+                        <span>Operations</span>
+                    </a>
+                    <a href="#" class="section-item" data-section="Inventory">
+                        <i class="bi bi-check-lg invisible"></i>
+                        <span>Inventory</span>
+                    </a>
+                    <a href="#" class="section-item" data-section="Finance">
+                        <i class="bi bi-check-lg invisible"></i>
+                        <span>Finance</span>
+                    </a>
+                    <a href="#" class="section-item" data-section="HR">
+                        <i class="bi bi-check-lg invisible"></i>
+                        <span>HR</span>
+                    </a>
+                    <a href="#" class="section-item" data-section="Reports">
+                        <i class="bi bi-check-lg invisible"></i>
+                        <span>Reports</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEPARATOR -->
+        <div class="sidebar-separator"></div>
+
+        <!-- DYNAMIC SUBMENU - Independent section -->
+        <div class="dynamic-submenu" id="dynamicSubmenu">
+            {% if current_section == 'Accounts' or not current_section %}
+                <!-- Accounts Submenu -->
+                <div class="nav-section">
+                    <a class="nav-link nav-toggle" 
+                       data-bs-toggle="collapse" 
+                       href="#entityAccountMasterMenu" 
+                       role="button" 
+                       aria-expanded="{% if 'entity-accounts' in request.path %}true{% else %}false{% endif %}">
+                        <i class="bi bi-people-fill"></i>
+                        <span class="nav-text-scroll long-text" data-full-text="Entity Account Master">Entity Account Master</span>
+                        <i class="bi bi-chevron-down ms-auto toggle-icon"></i>
+                    </a>
+                    <div class="collapse {% if 'entity-accounts' in request.path %}show{% endif %}" id="entityAccountMasterMenu">
+                        <div class="nav-submenu">
+                            <a href="{% url 'entity_account_create' %}" 
+                               class="sub-link {% if 'entity-accounts/create' in request.path %}active{% endif %}">
+                                <i class="bi bi-check-lg {% if 'entity-accounts/create' in request.path %}visible{% else %}invisible{% endif %}"></i>
+                                <span>Account Master</span>
+                            </a>
+                            <a href="{% url 'entity_account_list' %}" 
+                               class="sub-link {% if 'entity-accounts' in request.path and 'create' not in request.path %}active{% endif %}">
+                                <i class="bi bi-check-lg {% if 'entity-accounts' in request.path and 'create' not in request.path %}visible{% else %}invisible{% endif %}"></i>
+                                <span>Entity Accounts List</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <a class="nav-link nav-toggle" 
+                       data-bs-toggle="collapse" 
+                       href="#entityNatureMenu" 
+                       role="button" 
+                       aria-expanded="{% if 'entity-natures' in request.path %}true{% else %}false{% endif %}">
+                        <i class="bi bi-tag-fill"></i>
+                        <span class="nav-text-scroll" data-full-text="Entity Nature">Entity Nature</span>
+                        <i class="bi bi-chevron-down ms-auto toggle-icon"></i>
+                    </a>
+                    <div class="collapse {% if 'entity-natures' in request.path %}show{% endif %}" id="entityNatureMenu">
+                        <div class="nav-submenu">
+                            <a href="{% url 'entity_nature_create' %}" 
+                               class="sub-link {% if 'entity-natures/create' in request.path %}active{% endif %}">
+                                <i class="bi bi-check-lg {% if 'entity-natures/create' in request.path %}visible{% else %}invisible{% endif %}"></i>
+                                <span>Create Nature</span>
+                            </a>
+                            <a href="{% url 'entity_nature_list' %}" 
+                               class="sub-link {% if 'entity-natures' in request.path and 'create' not in request.path %}active{% endif %}">
+                                <i class="bi bi-check-lg {% if 'entity-natures' in request.path and 'create' not in request.path %}visible{% else %}invisible{% endif %}"></i>
+                                <span>Entity Nature List</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <a href="{% url 'document_create' %}" class="nav-link {% if 'document' in request.path %}active{% endif %}">
+                        <i class="bi bi-file-earmark-text-fill"></i>
+                        <span class="nav-text-scroll" data-full-text="Documents Master">Documents Master</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <a href="{% url 'document_list' %}" class="nav-link {% if 'entity-document' in request.path %}active{% endif %}">
+                        <i class="bi bi-folder-fill"></i>
+                        <span class="nav-text-scroll long-text" data-full-text="Entity Documents Master">Entity Documents Master</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <a href="{% url 'sub_account_list' %}" class="nav-link {% if 'sub-account' in request.path %}active{% endif %}">
+                        <i class="bi bi-layers-fill"></i>
+                        <span class="nav-text-scroll long-text" data-full-text="Subaccount Master">Subaccount Master</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-grid-3x3-gap-fill"></i>
+                        <span class="nav-text-scroll" data-full-text="Subaccount Types">Subaccount Types</span>
+                    </a>
+                </div>
+
+            {% elif current_section == 'Services' %}
+                <!-- Services Submenu -->
+                <div class="nav-section">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-gear-fill"></i>
+                        <span class="nav-text-scroll long-text" data-full-text="Service Management">Service Management</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-calendar-check-fill"></i>
+                        <span class="nav-text-scroll long-text" data-full-text="Service Scheduling">Service Scheduling</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-tools"></i>
+                        <span class="nav-text-scroll" data-full-text="Maintenance">Maintenance</span>
+                    </a>
+                </div>
+
+            {% elif current_section == 'Pricing' %}
+                <!-- Pricing Submenu -->
+                <div class="nav-section">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-currency-dollar"></i>
+                        <span class="nav-text-scroll" data-full-text="Price Lists">Price Lists</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-graph-up"></i>
+                        <span class="nav-text-scroll" data-full-text="Rate Cards">Rate Cards</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-calculator"></i>
+                        <span class="nav-text-scroll" data-full-text="Quotations">Quotations</span>
+                    </a>
+                </div>
+
+            {% elif current_section == 'Sales' %}
+                <!-- Sales Submenu -->
+                <div class="nav-section">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-cart-fill"></i>
+                        <span class="nav-text-scroll" data-full-text="Orders">Orders</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-receipt"></i>
+                        <span class="nav-text-scroll" data-full-text="Invoices">Invoices</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-person-check-fill"></i>
+                        <span class="nav-text-scroll" data-full-text="Customers">Customers</span>
+                    </a>
+                </div>
+
+            {% elif current_section == 'Purchases' %}
+                <!-- Purchases Submenu -->
+                <div class="nav-section">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-bag-fill"></i>
+                        <span class="nav-text-scroll long-text" data-full-text="Purchase Orders">Purchase Orders</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-truck"></i>
+                        <span class="nav-text-scroll" data-full-text="Suppliers">Suppliers</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-box-seam-fill"></i>
+                        <span class="nav-text-scroll long-text" data-full-text="Goods Receipt">Goods Receipt</span>
+                    </a>
+                </div>
+
+            {% elif current_section == 'Operations' %}
+                <!-- Operations Submenu -->
+                <div class="nav-section">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-kanban-fill"></i>
+                        <span class="nav-text-scroll long-text" data-full-text="Job Orders">Job Orders</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-map-fill"></i>
+                        <span class="nav-text-scroll long-text" data-full-text="Route Planning">Route Planning</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-clock-fill"></i>
+                        <span class="nav-text-scroll" data-full-text="Timesheets">Timesheets</span>
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+        
+        {% endwith %}
+    </nav>
+
+    <!-- Bottom User Section -->
+    <div class="sidebar-footer">
+        <div class="user-menu">
+            <div class="user-info">
+                <div class="user-avatar">{{ request.user.username|first|upper }}</div>
+                <span class="user-name">{{ request.user.username }}</span>
+            </div>
+            <div class="user-actions">
+                <a href="#" class="btn btn-link p-1" title="Settings"><i class="bi bi-gear"></i></a>
+                <a href="{% url 'logout' %}" class="btn btn-link p-1 text-danger" title="Logout"><i class="bi bi-box-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 260px;
+    height: 100vh;
+    background: linear-gradient(180deg, #1e1b4b 0%, #0f0a1e 100%);
+    color: #fff;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    height: 60px;
+    background: rgba(99, 102, 241, 0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    flex-shrink: 0;
+}
+
+.brand-icon {
+    width: 32px;
+    height: 32px;
+    background: #6366f1;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.75rem;
+}
+
+.brand-icon i {
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+.brand-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: -0.5px;
+}
+
+.sidebar-nav {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0.75rem 0.5rem;
+}
+
+/* Hide scrollbar */
+.sidebar-nav::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px;
+}
+
+/* SECTION SELECTOR - Completely Independent */
+.section-selector-wrapper {
+    margin: 0 0.5rem 0.75rem 0.5rem;
+    position: relative;
+    z-index: 100;
+}
+
+.section-selector-header {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: rgba(99, 102, 241, 0.2);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    border-radius: 8px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.section-selector-header:hover {
+    background: rgba(99, 102, 241, 0.3);
+}
+
+.section-selector-header i:first-child {
+    margin-right: 0.75rem;
+    font-size: 1rem;
+}
+
+.section-toggle-icon {
+    transition: transform 0.3s ease;
+    font-size: 0.8rem;
+}
+
+.section-selector-wrapper.open .section-toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* Section Dropdown - Independent scrollable area */
+.section-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 0.25rem;
+    background: rgba(30, 27, 75, 0.98);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 8px;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.section-selector-wrapper.open .section-dropdown {
+    max-height: 250px;
+    opacity: 1;
+    overflow-y: auto;
+}
+
+/* Custom scrollbar for section dropdown */
+.section-dropdown::-webkit-scrollbar {
+    width: 4px;
+}
+
+.section-dropdown::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.section-dropdown::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.2);
+    border-radius: 2px;
+}
+
+.section-dropdown-inner {
+    padding: 0.5rem;
+}
+
+.section-item {
+    display: flex;
+    align-items: center;
+    padding: 0.625rem 0.875rem;
+    color: #a5b4fc;
+    text-decoration: none;
+    font-size: 0.875rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    margin-bottom: 0.125rem;
+}
+
+.section-item:hover {
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+}
+
+.section-item.active {
+    background: rgba(99, 102, 241, 0.3);
+    color: #fff;
+}
+
+.section-item i {
+    margin-right: 0.75rem;
+    font-size: 1rem;
+    color: #6366f1;
+}
+
+.section-item.active i {
+    color: #818cf8;
+}
+
+/* Separator */
+.sidebar-separator {
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+    margin: 0.5rem 1rem 0.75rem 1rem;
+}
+
+/* DYNAMIC SUBMENU */
+.dynamic-submenu {
+    padding: 0 0.25rem;
+}
+
+.nav-section {
+    margin-bottom: 0.25rem;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: #a5b4fc;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+    margin: 0 0.25rem;
+    border-radius: 0 6px 6px 0;
+    cursor: pointer;
+}
+
+.nav-link:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.05);
+}
+
+.nav-link.active {
+    color: #fff;
+    background: rgba(99, 102, 241, 0.2);
+    border-left-color: #6366f1;
+}
+
+.nav-link i:first-child {
+    width: 20px;
+    margin-right: 0.75rem;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+/* ============================================
+   TEXT SCROLL EFFECT - RIGHT TO LEFT
+   Reveals END of long text first (e.g., "Master")
+   ============================================ */
+.nav-text-scroll {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 140px;
+    vertical-align: middle;
+    position: relative;
+}
+
+/* Only long text (>15 chars) gets scroll animation */
+.nav-link:hover .nav-text-scroll.long-text {
+    overflow: visible;
+    animation: scrollRightToLeft 3s ease-in-out infinite;
+}
+
+@keyframes scrollRightToLeft {
+    0%, 15% {
+        transform: translateX(0);
+    }
+    45%, 55% {
+        transform: translateX(calc(-100% + 140px));
+    }
+    85%, 100% {
+        transform: translateX(0);
+    }
+}
+
+.toggle-icon {
+    font-size: 0.75rem;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+.nav-link[aria-expanded="true"] .toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* Submenu items */
+.nav-submenu {
+    padding: 0.25rem 0;
+}
+
+.sub-link {
+    display: flex;
+    align-items: center;
+    padding: 0.625rem 1rem 0.625rem 2.5rem;
+    color: #a5b4fc;
+    text-decoration: none;
+    font-size: 0.8125rem;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+    margin: 0 0.25rem;
+    border-radius: 0 6px 6px 0;
+}
+
+.sub-link:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.05);
+}
+
+.sub-link.active {
+    color: #fff;
+    background: rgba(99, 102, 241, 0.25);
+    border-left-color: #6366f1;
+}
+
+.sub-link i {
+    margin-right: 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    background: rgba(0,0,0,0.2);
+    flex-shrink: 0;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.user-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #fff;
+}
+
+.user-actions {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.user-actions .btn-link {
+    color: #a5b4fc;
+    font-size: 1rem;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    text-decoration: none;
+}
+
+.user-actions .btn-link:hover {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+}
+
+.user-actions .text-danger {
+    color: #ef4444 !important;
+}
+
+.user-actions .text-danger:hover {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 991.98px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .sidebar.show {
+        transform: translateX(0);
+    }
+}
+</style>
+
+<script>
+// Toggle section dropdown independently
+function toggleSectionDropdown() {
+    const wrapper = document.querySelector('.section-selector-wrapper');
+    const isOpen = wrapper.classList.contains('open');
+    
+    if (isOpen) {
+        wrapper.classList.remove('open');
+    } else {
+        wrapper.classList.add('open');
+    }
+}
+
+// Close section dropdown when clicking outside
+document.addEventListener('click', function(event) {
+    const wrapper = document.querySelector('.section-selector-wrapper');
+    const isClickInside = wrapper.contains(event.target);
+    
+    if (!isClickInside && wrapper.classList.contains('open')) {
+        wrapper.classList.remove('open');
+    }
+});
+
+// Prevent section dropdown from interfering with submenu
+document.querySelectorAll('.section-item').forEach(item => {
+    item.addEventListener('click', function(e) {
+        const wrapper = document.querySelector('.section-selector-wrapper');
+        wrapper.classList.remove('open');
+        
+        const section = this.getAttribute('data-section');
+        if (section) {
+            localStorage.setItem('currentSection', section);
+        }
+    });
+});
+
+// Restore section on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const savedSection = localStorage.getItem('currentSection');
+    const sectionNameEl = document.getElementById('currentSectionName');
+    
+    if (savedSection && sectionNameEl && !sectionNameEl.textContent.trim()) {
+        sectionNameEl.textContent = savedSection;
+    }
+});
+</script>

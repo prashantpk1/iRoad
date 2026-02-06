@@ -287,3 +287,54 @@ def add_entity_comment(request, pk):
     
     messages.success(request, 'Comment added successfully')
     return redirect('entity_account_list')
+
+
+
+
+def entity_nature_detail_api(request, pk):
+    """API endpoint for entity nature drawer details"""
+    nature = get_object_or_404(EntityNature, pk=pk)
+    
+    # Get comments
+    comments = EntityNatureComment.objects.filter(entity_nature=nature).order_by('-created_at')
+    
+    data = {
+        'id': nature.id,
+        'entity_nature_code': nature.entity_nature_code,
+        'entity_nature_type': nature.get_entity_nature_type_display(),
+        'entity_nature_status': nature.entity_nature_status,
+        'entity_nature_nationality': nature.get_entity_nature_nationality_display(),
+        'entity_nature_residency': nature.get_entity_nature_residency_display(),
+        'entity_nature_label_english': nature.entity_nature_label_english,
+        'entity_nature_label_arabic': nature.entity_nature_label_arabic,
+        'comments': [
+            {
+                'user': c.user.username,
+                'text': c.text,
+                'created_at': c.created_at.strftime('%Y-%m-%d %H:%M')
+            }
+            for c in comments
+        ]
+    }
+    return JsonResponse(data)
+
+@require_POST
+def add_entity_nature_comment(request, pk):
+    """Add comment to entity nature"""
+    nature = get_object_or_404(EntityNature, pk=pk)
+    data = json.loads(request.body)
+    
+    comment = EntityNatureComment.objects.create(
+        entity_nature=nature,
+        user=request.user,
+        text=data.get('text', '')
+    )
+    
+    return JsonResponse({'success': True, 'id': comment.id})
+
+@require_POST
+def delete_entity_nature(request, pk):
+    """Delete entity nature"""
+    nature = get_object_or_404(EntityNature, pk=pk)
+    nature.delete()
+    return JsonResponse({'success': True})

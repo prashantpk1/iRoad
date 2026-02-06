@@ -50,4 +50,9 @@ urlpatterns = [
     path('entity-accounts/<int:pk>/comment/', add_entity_comment, name='entity_account_comment'),
     path('entity-accounts/<int:pk>/duplicate/', duplicate_entity_account, name='entity_account_duplicate'),
 
+
+    path('entity-natures/<int:pk>/detail/', entity_nature_detail_api, name='entity_nature_detail_api'),
+    path('entity-natures/<int:pk>/comment/', add_entity_nature_comment, name='entity_nature_comment'),
+    path('entity-natures/<int:pk>/delete/', delete_entity_nature, name='entity_nature_delete'),
+
 ]
